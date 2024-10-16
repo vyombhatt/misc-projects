@@ -46,4 +46,24 @@ def get_item():
     for item in items:
         if item['name'] == name:
             return item
-    return {"message" : "Record does not exist!"}
+    return {"message" : "Record does not exist!"}, 404 # like mentioned above, it's a good practice to send status code
+
+# Updating an item using put request
+@app.put('/update-item')
+def update_item():
+    request_data = request.get_json()
+    for item in items:
+        if item['name']==request_data['name']:
+            item['price']=request_data['price']
+            return {"message":"item updated successfully!"}, 200 # along with dictionary, you can return a specific status code if needed
+    return {"message" : "Record does not exist!"}, 404
+
+# Deleting an item
+@app.delete('/delete-item')
+def delete_item():
+    name = request.args.get('name')
+    for item in items:
+        if item['name'] == name:
+            items.remove(item)
+            return {'message': "item deleted successfully!"}, 200
+    return {"message" : "Record does not exist!"}, 404 # like mentioned above, it's a good practice to send status code
